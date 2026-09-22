@@ -1,11 +1,4 @@
-/**
- * ANIMACJE PRZEJŚĆ ALANA - SILNIK INTERAKCJI I FIZYKI
- * Czysty Vanilla JS + WAAPI + Canvas 2D
- * Zero zbędnych bibliotek, stabilne 60 FPS, modernistyczny biały design
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Globalny stan aplikacji
   const state = {
     speedMultiplier: 1.0,
     reducedMotion: false,
@@ -13,9 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     activeModalCard: null
   };
 
-  /* ==========================================================================
-     00. KURTYNA STARTOWA (INTRO SHUTTER) & PRZYCISK POWTÓRKI
-     ========================================================================== */
   const introCurtain = document.getElementById('introCurtain');
   const btnReplayIntro = document.getElementById('btnReplayIntro');
   let introTimerA = null;
@@ -27,17 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(introTimerB);
 
     if (isReplay) {
-      // 1. Natychmiast zresetuj kurtynę do stanu zamkniętego bez animacji
       introCurtain.classList.add('instant-reset');
       introCurtain.classList.remove('hidden', 'revealed');
-      void introCurtain.offsetHeight; // Wymuszenie reflow
+      void introCurtain.offsetHeight;
 
-      // 2. W kolejnej klatce włącz z powrotem przejścia CSS
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           introCurtain.classList.remove('instant-reset');
 
-          // 3. Po pauzie na przeczytanie odznaki rozsuń żaluzję
           introTimerA = setTimeout(() => {
             introCurtain.classList.add('revealed');
             introTimerB = setTimeout(() => {
@@ -47,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
     } else {
-      // Pierwsze wejście na stronę
       introCurtain.classList.remove('hidden', 'revealed');
       void introCurtain.offsetHeight;
 
@@ -60,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Uruchom intro przy pierwszym załadowaniu
   playIntro(false);
 
   if (btnReplayIntro) {
@@ -70,9 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ==========================================================================
-     TELEMETRIA: LICZNIK KLATEK (FPS)
-     ========================================================================== */
   const fpsCounter = document.getElementById('fpsCounter');
   let lastFpsTime = performance.now();
   let frameCount = 0;
@@ -96,9 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   requestAnimationFrame(loopFps);
 
-  /* ==========================================================================
-     TŁO: INTERAKTYWNA SIATKA FALOWA (CANVAS 2D)
-     ========================================================================== */
   const canvas = document.getElementById('waveCanvas');
   if (canvas) {
     const ctx = canvas.getContext('2d');
@@ -159,9 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(drawWave);
   }
 
-  /* ==========================================================================
-     HERO: KINETYCZNE LITERY TYTUŁU ALANA (REAKCJA NA KURSOR)
-     ========================================================================== */
   const charSpans = document.querySelectorAll('.char-span');
   window.addEventListener('pointermove', (e) => {
     charSpans.forEach((span) => {
@@ -185,9 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ==========================================================================
-     01. ŻALUZJOWE PRZEJŚCIE EKRANU
-     ========================================================================== */
   const screenTabs = document.querySelectorAll('.screen-tab-btn');
   const screenPanes = document.querySelectorAll('.screen-pane');
   const screenWiper = document.getElementById('screenWiper');
@@ -222,26 +195,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       isScreenTransitioning = true;
 
-      // Zaktualizuj stan przycisków
       screenTabs.forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
 
-      // 1. Zamknij żaluzję (wiping-in)
       screenWiper.classList.remove('wiping-out');
       screenWiper.classList.add('wiping-in');
 
       setTimeout(() => {
-        // 2. Podmień widok pod zasłoniętą żaluzją
         screenPanes.forEach((p) => p.classList.remove('active'));
         screenPanes[targetIndex].classList.add('active');
         state.currentScreen = targetIndex;
 
-        // Jeśli to ekran licznika, uruchom animację cyfr
         if (targetIndex === 2) {
           animateCounter();
         }
 
-        // 3. Otwórz żaluzję (wiping-out)
         screenWiper.classList.remove('wiping-in');
         screenWiper.classList.add('wiping-out');
 
@@ -253,9 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ==========================================================================
-     02. WYSKAKUJĄCE OKNO 3D (FLIP)
-     ========================================================================== */
   const flipSpecimens = document.querySelectorAll('.flip-specimen');
   const flipModalStage = document.getElementById('flipModalStage');
   const modalCard = document.getElementById('modalCard');
@@ -284,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Efekt 3D tilt na kafelkach
   flipSpecimens.forEach((card) => {
     card.addEventListener('pointermove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -303,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.transform = '';
     });
 
-    // Kliknięcie -> FLIP EXPANSION
     card.addEventListener('click', () => {
       state.activeModalCard = card;
       const first = card.getBoundingClientRect();
@@ -321,18 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
         modalSlotGraphic.appendChild(svg.cloneNode(true));
       }
 
-      // Pokaż modal i pobierz wymiary końcowe
       flipModalStage.classList.add('active');
       flipModalStage.setAttribute('aria-hidden', 'false');
       const last = modalCard.getBoundingClientRect();
 
-      // INVERT
       const deltaX = first.left - last.left;
       const deltaY = first.top - last.top;
       const scaleX = first.width / last.width;
       const scaleY = first.height / last.height;
 
-      // PLAY (WAAPI bez fill:'both', aby nie blokować transformacji)
       const anim = modalCard.animate([
         {
           transform: `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`,
@@ -398,9 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closeModal();
   });
 
-  /* ==========================================================================
-     03. FALA UDERZENIOWA PO KLIKNIĘCIU (SHOCKWAVE ARENA)
-     ========================================================================== */
   const shockwaveArena = document.getElementById('shockwaveArena');
   const shockCoords = document.getElementById('shockCoords');
 
@@ -419,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Generuj nową falę uderzeniową (obsługuje wielokrotne, szybkie kliknięcia!)
       const pulse = document.createElement('div');
       pulse.className = 'wave-pulse';
       pulse.style.left = `${x}px`;
@@ -432,21 +388,16 @@ document.addEventListener('DOMContentLoaded', () => {
         pulse.remove();
       });
 
-      // Zapasowe usunięcie na wypadek braku eventu
       setTimeout(() => {
         if (pulse.parentNode) pulse.remove();
       }, 1000 * state.speedMultiplier);
     });
   }
 
-  /* ==========================================================================
-     04. PŁYNNY MORFIZM KSZTAŁTÓW (PARAMETRIC SPLINE MORPH)
-     ========================================================================== */
   const morphPath = document.getElementById('morphPath');
   const morphButtons = document.querySelectorAll('.morph-selector-btn');
   const morphCenterDot = document.querySelector('.morph-center-dot') || document.querySelector('.morph-core-dot');
 
-  // Funkcja generująca 60 punktów obwodu dla każdego kształtu
   const NUM_POINTS = 60;
 
   function generatePoints(type) {
@@ -507,10 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     } else if (type === 'drop') {
-      // Kropla wody: czubek na górze, okrągły spód
       for (let i = 0; i < NUM_POINTS; i++) {
         const t = (i / NUM_POINTS) * Math.PI * 2;
-        // Równanie parametryczne kropli
         const x = cx + 64 * Math.sin(t) * Math.pow(Math.sin(t / 2), 1.5);
         const y = 168 - 140 * Math.sin(t / 2);
         pts.push({ x, y });
@@ -554,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function step(now) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Quintic ease out
       const ease = 1 - Math.pow(1 - progress, 4);
 
       for (let i = 0; i < NUM_POINTS; i++) {
@@ -583,9 +531,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ==========================================================================
-     05. FIZYKA I RZUCANIE KLOCKAMI (GRAVITY & INERTIA SANDBOX)
-     ========================================================================== */
   const sandbox = document.getElementById('physicsSandbox');
   const domBlocks = document.querySelectorAll('.phys-block');
   const btnMagnetize = document.getElementById('btnMagnetize');
@@ -598,7 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
     { x: 490, y: 140 }
   ];
 
-  // Silnik fizyki klocków
   const blockObjects = [];
 
   domBlocks.forEach((el, idx) => {
@@ -657,7 +601,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!obj.isDragging) return;
       obj.isDragging = false;
 
-      // Oblicz pęd rzucenia z ostatnich próbek ruchu kursora
       if (obj.history.length >= 2) {
         const last = obj.history[obj.history.length - 1];
         const prev = obj.history[0];
@@ -666,7 +609,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const computedVx = ((last.x - prev.x) / dt) * 18;
         const computedVy = ((last.y - prev.y) / dt) * 18;
 
-        // Bezpieczne ograniczenie prędkości
         obj.vx = Math.max(-28, Math.min(28, computedVx));
         obj.vy = Math.max(-28, Math.min(28, computedVy));
       }
@@ -678,7 +620,6 @@ document.addEventListener('DOMContentLoaded', () => {
     blockObjects.push(obj);
   });
 
-  // Pętla fizyki (inercja, tarcie, odbijanie od ścianek)
   function physicsLoop() {
     if (!sandbox) return;
     const maxXBase = sandbox.clientWidth;
@@ -694,7 +635,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxX = maxXBase - obj.el.offsetWidth;
         const maxY = maxYBase - obj.el.offsetHeight;
 
-        // Odbicia od krawędzi (z tłumieniem)
         if (obj.x <= 0) {
           obj.x = 0;
           obj.vx = -obj.vx * 0.72;
@@ -711,7 +651,6 @@ document.addEventListener('DOMContentLoaded', () => {
           obj.vy = -obj.vy * 0.72;
         }
 
-        // Tarcie podłoża
         obj.vx *= 0.95;
         obj.vy *= 0.95;
 
@@ -723,7 +662,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   requestAnimationFrame(physicsLoop);
 
-  // Przyciągnij do siatki
   if (btnMagnetize) {
     btnMagnetize.addEventListener('click', () => {
       blockObjects.forEach((obj, idx) => {
@@ -759,7 +697,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Rozrzuć klocki po polu (eksplozja prędkości)
   if (btnScatter) {
     btnScatter.addEventListener('click', () => {
       blockObjects.forEach((obj) => {
@@ -769,9 +706,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ==========================================================================
-     06. MORFUJĄCY PRZYCISK AKCJI (HYPERMORPH BUTTON)
-     ========================================================================== */
   const hyperBtn = document.getElementById('hyperBtn');
   const btnStatusText = document.getElementById('btnStatusText');
   let hyperTimeoutA = null;
@@ -783,7 +717,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Stan: Ładowanie
       hyperBtn.classList.remove('state-idle');
       hyperBtn.classList.add('state-loading');
       if (btnStatusText) {
@@ -794,7 +727,6 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(hyperTimeoutB);
 
       hyperTimeoutA = setTimeout(() => {
-        // Stan: Sukces
         hyperBtn.classList.remove('state-loading');
         hyperBtn.classList.add('state-success');
         if (btnStatusText) {
@@ -802,7 +734,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         hyperTimeoutB = setTimeout(() => {
-          // Powrót do gotowości
           hyperBtn.classList.remove('state-success');
           hyperBtn.classList.add('state-idle');
           if (btnStatusText) {
@@ -813,9 +744,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ==========================================================================
-     PŁYWAJĄCY KONSOLIDATOR TEMPA RUCHU (DOCK)
-     ========================================================================== */
   const speedChips = document.querySelectorAll('.speed-chip');
   const btnReducedMotion = document.getElementById('btnReducedMotion');
   const reducedMotionText = document.getElementById('reducedMotionText');
