@@ -11,9 +11,6 @@
 </head>
 <body class="site-body">
 
-  <!-- ========================================================================
-       00. INTRO: ŻALUZJA WEJŚCIOWA ALANA
-       ======================================================================== -->
   <div id="introCurtain" class="intro-curtain" aria-hidden="true">
     <div class="shutter-col col-1"></div>
     <div class="shutter-col col-2"></div>
@@ -26,7 +23,6 @@
     </div>
   </div>
 
-  <!-- Górny pasek nawigacji -->
   <header class="masthead">
     <div class="masthead-left">
       <span class="brand-monogram">ALAN</span>
@@ -53,14 +49,10 @@
     </div>
   </header>
 
-  <!-- Pływające tło z interaktywną siatką punktów (Canvas 2D) -->
   <canvas id="waveCanvas" class="background-wave-canvas" aria-hidden="true"></canvas>
 
   <main class="page-container">
 
-    <!-- ========================================================================
-         HERO: KINETYCZNY TYTUŁ ALANA
-         ======================================================================== -->
     <section class="hero-section">
       <div class="hero-meta">
         <span class="pill-tag">PROJEKT STUDENCKI</span>
@@ -112,9 +104,6 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         SEKCJA 01: ŻALUZJOWE PRZEJŚCIE EKRANU
-         ======================================================================== -->
     <section id="demo-fullscreen" class="showcase-block">
       <div class="block-header">
         <span class="block-number">01</span>
@@ -132,7 +121,6 @@
         </div>
 
         <div class="screen-display-area" id="screenStage">
-          <!-- Żaluzje przejściowe -->
           <div class="screen-wiper" id="screenWiper" aria-hidden="true">
             <span class="wiper-slat s1"></span>
             <span class="wiper-slat s2"></span>
@@ -140,7 +128,6 @@
             <span class="wiper-slat s4"></span>
           </div>
 
-          <!-- Ekran 0 -->
           <div class="screen-pane active" id="pane0">
             <div class="pane-content-wrap">
               <h3 class="pane-title">Czysta Przestrzeń i Geometria</h3>
@@ -154,7 +141,6 @@
             </div>
           </div>
 
-          <!-- Ekran 1 -->
           <div class="screen-pane" id="pane1">
             <div class="pane-content-wrap">
               <h3 class="pane-title">Fale Oscylatorów</h3>
@@ -169,7 +155,6 @@
             </div>
           </div>
 
-          <!-- Ekran 2 -->
           <div class="screen-pane" id="pane2">
             <div class="pane-content-wrap">
               <h3 class="pane-title">Płynność Przejścia</h3>
@@ -184,9 +169,6 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         SEKCJA 02: 3D FLIP KAFELKA DO PEŁNEGO OKNA
-         ======================================================================== -->
     <section id="demo-flip" class="showcase-block">
       <div class="block-header">
         <span class="block-number">02</span>
@@ -197,7 +179,6 @@
       </p>
 
       <div class="flip-cards-row" id="flipContainer">
-        <!-- Karta 1 -->
         <div class="flip-specimen" data-card="1" tabindex="0" role="button" aria-label="Rozwiń moduł 01">
           <div class="specimen-3d-box">
             <div class="specimen-top">
@@ -216,7 +197,6 @@
           </div>
         </div>
 
-        <!-- Karta 2 -->
         <div class="flip-specimen" data-card="2" tabindex="0" role="button" aria-label="Rozwiń moduł 02">
           <div class="specimen-3d-box">
             <div class="specimen-top">
@@ -234,7 +214,6 @@
           </div>
         </div>
 
-        <!-- Karta 3 -->
         <div class="flip-specimen" data-card="3" tabindex="0" role="button" aria-label="Rozwiń moduł 03">
           <div class="specimen-3d-box">
             <div class="specimen-top">
@@ -253,7 +232,6 @@
         </div>
       </div>
 
-      <!-- Okno powiększone FLIP -->
       <div id="flipModalStage" class="flip-modal-stage" aria-hidden="true">
         <div class="modal-backdrop" id="btnModalBackdrop"></div>
         <div class="modal-expanded-card" id="modalCard">
@@ -291,9 +269,6 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         SEKCJA 03: FALA PO KLIKNIĘCIU (SHOCKWAVE)
-         ======================================================================== -->
     <section id="demo-shockwave" class="showcase-block">
       <div class="block-header">
         <span class="block-number">03</span>
@@ -322,9 +297,6 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         SEKCJA 04: PŁYNNY MORFIZM KSZTAŁTÓW
-         ======================================================================== -->
     <section id="demo-morph" class="showcase-block">
       <div class="block-header">
         <span class="block-number">04</span>
@@ -351,9 +323,6 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         SEKCJA 05: FIZYKA I RZUCANIE KLOCKAMI
-         ======================================================================== -->
     <section id="demo-physics" class="showcase-block">
       <div class="block-header">
         <span class="block-number">05</span>
@@ -397,9 +366,6 @@
       </div>
     </section>
 
-    <!-- ========================================================================
-         SEKCJA 06: WIELOSTANOWY PRZYCISK
-         ======================================================================== -->
     <section id="demo-button" class="showcase-block">
       <div class="block-header">
         <span class="block-number">06</span>
@@ -425,7 +391,6 @@
 
   </main>
 
-  <!-- PŁYWAJĄCY KONSOLIDATOR TEMPA RUCHU (DOCK) -->
   <aside class="motion-dock" aria-label="Sterowanie parametrami ruchu">
     <div class="dock-item">
       <span class="dock-label">SZYBKOŚĆ ANIMACJI:</span>
@@ -437,7 +402,6 @@
     </div>
   </aside>
 
-  <!-- STOPKA -->
   <footer class="site-footer">
     <div class="footer-left">
       <span class="footer-bold">ANIMACJE PRZEJŚĆ ALANA // PROJEKT STUDENCKI</span>
