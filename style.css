@@ -1,10 +1,4 @@
-/* ==========================================================================
-   ANIMACJE PRZEJŚĆ ALANA - MODERNISTYCZNY DESIGN
-   Czysty kod, brak zbędnych bibliotek, stabilne 60 FPS
-   ========================================================================== */
-
 :root {
-  /* Paleta bieli i głębokiego atramentu */
   --bg-white: #ffffff;
   --bg-subtle: #f8f9fa;
   --bg-surface: #f1f3f5;
@@ -22,31 +16,23 @@
   --accent-blue: #2563eb;
   --accent-green: #10b981;
 
-  /* Typografia */
   --font-display: 'Epilogue', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Krzywe interpolacji */
   --ease-quint: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-material: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Czasy animacji skalowane z poziomu sterownika */
   --speed-mult: 1;
   --dur-fast: calc(200ms * var(--speed-mult));
   --dur-normal: calc(450ms * var(--speed-mult));
   --dur-slow: calc(750ms * var(--speed-mult));
   --dur-intro: calc(950ms * var(--speed-mult));
 
-  /* Cienie głębi */
   --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.05);
   --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.08);
   --shadow-modal: 0 12px 28px rgba(0, 0, 0, 0.1);
 }
-
-/* ==========================================================================
-   RESET I DOSTOSOWANIE SYSTEMU PRZEGLĄDARKI
-   ========================================================================== */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -98,10 +84,6 @@ body {
   outline: 2px solid var(--border-strong);
   outline-offset: 3px;
 }
-
-/* ==========================================================================
-   00. KURTYNA STARTOWA (5-KOLUMNOWA ŻALUZJA)
-   ========================================================================== */
 
 .intro-curtain {
   position: fixed;
@@ -191,10 +173,6 @@ body {
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   TŁO CANVAS (INTERAKTYWNA SIATKA FALOWA)
-   ========================================================================== */
-
 .background-wave-canvas {
   position: fixed;
   inset: 0;
@@ -204,10 +182,6 @@ body {
   pointer-events: none;
   opacity: 0.35;
 }
-
-/* ==========================================================================
-   GÓRNA LISTWA NAWIGACYJNA (MASTHEAD)
-   ========================================================================== */
 
 .masthead {
   position: sticky;
@@ -291,10 +265,6 @@ body {
   border-color: var(--text-main);
 }
 
-/* ==========================================================================
-   UKŁAD GŁÓWNY
-   ========================================================================== */
-
 .page-container {
   position: relative;
   z-index: 10;
@@ -302,10 +272,6 @@ body {
   margin: 0 auto;
   padding: 0 48px 160px;
 }
-
-/* ==========================================================================
-   01. HERO / KINETYCZNA TYPOGRAFIA
-   ========================================================================== */
 
 .hero-section {
   padding: 80px 0 64px;
@@ -410,10 +376,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* ==========================================================================
-   STYLE WSPÓLNE DLA BLOKÓW POKAZOWYCH
-   ========================================================================== */
-
 .showcase-block {
   padding: 80px 0;
   border-bottom: 1px solid var(--border-light);
@@ -447,10 +409,6 @@ body {
   line-height: 1.6;
   margin-bottom: 36px;
 }
-
-/* ==========================================================================
-   02. PEŁNOEKRANOWE PRZEJŚCIE KURTYNOWE (SLAT SCREEN TRANSITION)
-   ========================================================================== */
 
 .screen-transition-stage {
   border: 1px solid var(--border-light);
@@ -509,7 +467,6 @@ body {
   padding: 48px;
 }
 
-/* Żaluzja przejściowa */
 .screen-wiper {
   position: absolute;
   inset: 0;
@@ -637,10 +594,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   03. ROZROST PRZESTRZENNY 3D (FLIP)
-   ========================================================================== */
-
 .flip-cards-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -724,7 +677,6 @@ body {
   border-top: 1px solid var(--border-light);
 }
 
-/* Modal FLIP */
 .flip-modal-stage {
   position: fixed;
   inset: 0;
@@ -850,10 +802,6 @@ body {
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   04. FALA UDERZENIOWA (SHOCKWAVE ARENA)
-   ========================================================================== */
-
 .shockwave-arena {
   position: relative;
   height: 380px;
@@ -930,10 +878,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   05. MORFIZM FORM GEOMETRYCZNYCH (LIQUID SPLINE MORPH)
-   ========================================================================== */
-
 .morph-arena {
   border: 1px solid var(--border-light);
   background: var(--bg-subtle);
@@ -1004,10 +948,6 @@ body {
   border-color: var(--text-main);
 }
 
-/* ==========================================================================
-   06. POLIGON FIZYKI SPRĘŻYN (GRAVITY SANDBOX)
-   ========================================================================== */
-
 .sandbox-toolbar {
   display: flex;
   gap: 12px;
@@ -1057,10 +997,6 @@ body {
   font-weight: 800;
   align-self: flex-end;
 }
-
-/* ==========================================================================
-   07. HYPER-MORPH BUTTON (WIELOSTANOWY PRZYCISK)
-   ========================================================================== */
 
 .hypermorph-arena {
   border: 1px solid var(--border-light);
@@ -1143,10 +1079,6 @@ body {
   transition: color var(--dur-fast) ease;
 }
 
-/* ==========================================================================
-   PŁYWAJĄCY KONSOLIDATOR TEMPA RUCHU (DOCK)
-   ========================================================================== */
-
 .motion-dock {
   position: fixed;
   bottom: 24px;
@@ -1204,10 +1136,6 @@ body {
   border-color: var(--text-main);
 }
 
-/* ==========================================================================
-   STOPKA
-   ========================================================================== */
-
 .site-footer {
   border-top: 1px solid var(--border-light);
   padding: 48px;
@@ -1227,10 +1155,6 @@ body {
   display: block;
   margin-bottom: 4px;
 }
-
-/* ==========================================================================
-   REDUCED MOTION
-   ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   :root {
@@ -1255,10 +1179,6 @@ body {
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
-
-/* ==========================================================================
-   RESPONSYWNOŚĆ
-   ========================================================================== */
 
 @media (max-width: 900px) {
   .masthead {
