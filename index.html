@@ -26,7 +26,7 @@
   <header class="masthead">
     <div class="masthead-left">
       <span class="brand-monogram">ALAN</span>
-      <span class="brand-title">ANIMACJE PRZEJŚĆ</span>
+      <span class="brand-title">ANIMACJE</span>
     </div>
 
     <div class="masthead-right">
@@ -36,15 +36,14 @@
       </div>
 
       <button id="btnReplayIntro" class="action-btn" type="button" aria-label="Odtwórz intro">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path d="M4 12v-2a8 8 0 1 1 2.34 5.66L3 19"/>
           <polyline points="3 14 3 19 8 19"/>
         </svg>
-        <span class="btn-text">ODTWÓRZ INTRO</span>
       </button>
 
-      <button id="btnReducedMotion" class="action-btn" type="button" aria-pressed="false" aria-label="Przełącz redukcję ruchu">
-        <span id="reducedMotionText">RUCH: PEŁNY</span>
+      <button id="btnReducedMotion" class="action-btn" type="button" aria-pressed="false">
+        <span id="reducedMotionText">RUCH</span>
       </button>
     </div>
   </header>
@@ -55,9 +54,9 @@
 
     <section class="hero-section">
       <div class="hero-meta">
-        <span class="pill-tag">PROJEKT STUDENCKI</span>
-        <span class="pill-tag">AUTOR: ALAN</span>
-        <span class="pill-tag">JS + CSS</span>
+        <span class="pill-tag">STUDENT</span>
+        <span class="pill-tag">ALAN</span>
+        <span class="pill-tag">VANILLA JS</span>
         <span class="pill-tag">60 FPS</span>
       </div>
 
@@ -91,33 +90,33 @@
       </div>
 
       <p class="hero-description">
-        Witam! Tutaj chciałbym przedstawić kilka różnych animacji w moim wykonaniu. Wszystko działa na żywo bez żadnych zewnętrznych bibliotek: dotykaj, przesuwaj i sprawdzaj przejścia!
+        Czysty JavaScript i CSS bez bibliotek. Dotykaj klocków, otwieraj kafelki i testuj przejścia na telefonie.
       </p>
 
-      <nav class="hero-quick-links" aria-label="Nawigacja po modułach demonstracyjnych">
-        <a href="#demo-fullscreen" class="quick-link">01. ŻALUZJA EKRANU</a>
-        <a href="#demo-flip" class="quick-link">02. KAFELEK 3D</a>
+      <nav class="hero-quick-links" aria-label="Szybka nawigacja">
+        <a href="#demo-fullscreen" class="quick-link">01. ŻALUZJA</a>
+        <a href="#demo-flip" class="quick-link">02. KAFELKI 3D</a>
         <a href="#demo-shockwave" class="quick-link">03. FALA DOTYKU</a>
-        <a href="#demo-morph" class="quick-link">04. MORFIZM SVG</a>
-        <a href="#demo-physics" class="quick-link">05. RZUCANIE KLOCKAMI</a>
-        <a href="#demo-button" class="quick-link">06. PRZYCISK STANU</a>
+        <a href="#demo-morph" class="quick-link">04. MORFIZM</a>
+        <a href="#demo-physics" class="quick-link">05. FIZYKA</a>
+        <a href="#demo-button" class="quick-link">06. PRZYCISK</a>
       </nav>
     </section>
 
     <section id="demo-fullscreen" class="showcase-block">
       <div class="block-header">
         <span class="block-number">01</span>
-        <h2 class="block-title">Żaluzjowe Przejście Ekranu</h2>
+        <h2 class="block-title">Żaluzjowe Przejście</h2>
       </div>
       <p class="block-lead">
-        Wybierz zakładkę. Cztery pionowe żaluzje błyskawicznie przesłaniają widok i odsłaniają nową treść.
+        Przełącz widok poniżej. Pionowe żaluzje zakrywają ekran i płynnie odsłaniają treść.
       </p>
 
       <div class="screen-transition-stage">
-        <div class="screen-nav" role="tablist" aria-label="Wybór widoku demonstracyjnego">
-          <button class="screen-tab-btn active" data-screen="0" type="button" role="tab" aria-selected="true" aria-controls="pane0" id="tab0">01: KONTRAST</button>
-          <button class="screen-tab-btn" data-screen="1" type="button" role="tab" aria-selected="false" aria-controls="pane1" id="tab1">02: PASKI</button>
-          <button class="screen-tab-btn" data-screen="2" type="button" role="tab" aria-selected="false" aria-controls="pane2" id="tab2">03: LICZNIK</button>
+        <div class="screen-nav">
+          <button class="screen-tab-btn active" data-screen="0" type="button">01: KONTRAST</button>
+          <button class="screen-tab-btn" data-screen="1" type="button">02: PASKI</button>
+          <button class="screen-tab-btn" data-screen="2" type="button">03: LICZNIK</button>
         </div>
 
         <div class="screen-display-area" id="screenStage">
@@ -128,12 +127,12 @@
             <span class="wiper-slat s4"></span>
           </div>
 
-          <div class="screen-pane active" id="pane0" role="tabpanel" aria-labelledby="tab0">
+          <div class="screen-pane active" id="pane0">
             <div class="pane-content-wrap">
-              <h3 class="pane-title">Czysta Przestrzeń i Geometria</h3>
-              <p class="pane-text">Biały modernizm bez żadnych rozmytych gradientów. Wszystkie podziały oparte są na precyzyjnych liniach 1px.</p>
+              <h3 class="pane-title">Czysta Geometria</h3>
+              <p class="pane-text">Biały modernizm oparty na precyzyjnych liniach 1px.</p>
               <div class="pane-interactive-grid">
-                <div class="grid-cell"><span>SZYBKOŚĆ: 60 FPS</span></div>
+                <div class="grid-cell"><span>FPS: 60</span></div>
                 <div class="grid-cell"><span>WEKTORY: GPU</span></div>
                 <div class="grid-cell"><span>KOD: ALAN</span></div>
                 <div class="grid-cell"><span>SILNIK: WAAPI</span></div>
@@ -141,10 +140,10 @@
             </div>
           </div>
 
-          <div class="screen-pane" id="pane1" role="tabpanel" aria-labelledby="tab1" hidden>
+          <div class="screen-pane" id="pane1">
             <div class="pane-content-wrap">
               <h3 class="pane-title">Fale Oscylatorów</h3>
-              <p class="pane-text">Elementy ruszają się z przesunięciem fazowym, tworząc iluzję fali mechanicznej.</p>
+              <p class="pane-text">Elementy ruszają się z mechanicznym przesunięciem fazowym.</p>
               <div class="kinetic-oscillators">
                 <div class="osc-bar b1"></div>
                 <div class="osc-bar b2"></div>
@@ -155,13 +154,13 @@
             </div>
           </div>
 
-          <div class="screen-pane" id="pane2" role="tabpanel" aria-labelledby="tab2" hidden>
+          <div class="screen-pane" id="pane2">
             <div class="pane-content-wrap">
-              <h3 class="pane-title">Płynność Przejścia</h3>
-              <p class="pane-text">Żaluzja przelicza czas w ułamkach sekundy, dzięki czemu zmiana widoku jest natychmiastowa.</p>
+              <h3 class="pane-title">Płynność Sprzętowa</h3>
+              <p class="pane-text">Natychmiastowe przeliczenie klatek przez interfejs.</p>
               <div class="brutalist-counter-box">
                 <span class="giant-num" id="dynamicNum">100%</span>
-                <span class="sub-label">PEŁNA PŁYNNOŚĆ SPRZĘTOWA</span>
+                <span class="sub-label">SPRZĘTOWA AKCELERACJA</span>
               </div>
             </div>
           </div>
@@ -172,14 +171,14 @@
     <section id="demo-flip" class="showcase-block">
       <div class="block-header">
         <span class="block-number">02</span>
-        <h2 class="block-title">Wyskakujące Okno (FLIP)</h2>
+        <h2 class="block-title">Wyskakujący Kafelek (FLIP)</h2>
       </div>
       <p class="block-lead">
-        Dotknij kafelka, aby powiększyć go do pełnego widoku z płynną interpolacją współrzędnych.
+        Dotknij dowolnego kafelka, aby otworzyć pełny widok interpolowany techniką FLIP.
       </p>
 
       <div class="flip-cards-row" id="flipContainer">
-        <div class="flip-specimen" data-card="1" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Rozwiń moduł: Orbita Współrzędnych">
+        <div class="flip-specimen" data-card="1" tabindex="0" role="button">
           <div class="specimen-3d-box">
             <div class="specimen-top">
               <span class="specimen-id">KAFELEK // 01</span>
@@ -197,7 +196,7 @@
           </div>
         </div>
 
-        <div class="flip-specimen" data-card="2" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Rozwiń moduł: Siatka Kwadratowa">
+        <div class="flip-specimen" data-card="2" tabindex="0" role="button">
           <div class="specimen-3d-box">
             <div class="specimen-top">
               <span class="specimen-id">KAFELEK // 02</span>
@@ -214,7 +213,7 @@
           </div>
         </div>
 
-        <div class="flip-specimen" data-card="3" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Rozwiń moduł: Pryzmat Wektorowy">
+        <div class="flip-specimen" data-card="3" tabindex="0" role="button">
           <div class="specimen-3d-box">
             <div class="specimen-top">
               <span class="specimen-id">KAFELEK // 03</span>
@@ -232,11 +231,11 @@
         </div>
       </div>
 
-      <div id="flipModalStage" class="flip-modal-stage" role="dialog" aria-modal="true" aria-hidden="true">
+      <div id="flipModalStage" class="flip-modal-stage" aria-hidden="true">
         <div class="modal-backdrop" id="btnModalBackdrop"></div>
         <div class="modal-expanded-card" id="modalCard">
-          <button class="modal-close-trigger" id="btnModalClose" type="button" aria-label="Zamknij podgląd">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <button class="modal-close-trigger" id="btnModalClose" type="button" aria-label="Zamknij">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"/>
               <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
@@ -247,19 +246,19 @@
               <span class="modal-badge-id" id="modalBadgeId">KAFELEK // 01</span>
               <h3 class="modal-huge-heading" id="modalHeading">Orbita Współrzędnych</h3>
               <p class="modal-body-copy" id="modalCopy">
-                Ten kafelek urósł płynnie ze swojej pierwotnej pozycji na karcie za pomocą techniki FLIP (First, Last, Invert, Play). Zamknij go krzyżykiem, klikając w tło lub wciskając Escape: zwinie się dokładnie na swoje miejsce!
+                Kafelek rozrasta się na cały ekran za pomocą techniki FLIP (First, Last, Invert, Play). Zamknij go przyciskiem lub tapnięciem w tło.
               </p>
               <div class="modal-telemetry-row">
                 <div class="telemetry-box">
-                  <span class="t-name">PRĘDKOŚĆ:</span>
+                  <span class="t-name">PRĘDKOŚĆ</span>
                   <span class="t-val">PŁYNNA</span>
                 </div>
                 <div class="telemetry-box">
-                  <span class="t-name">METODA:</span>
+                  <span class="t-name">METODA</span>
                   <span class="t-val">FLIP</span>
                 </div>
                 <div class="telemetry-box">
-                  <span class="t-name">AUTOR:</span>
+                  <span class="t-name">AUTOR</span>
                   <span class="t-val">ALAN</span>
                 </div>
               </div>
@@ -272,49 +271,46 @@
     <section id="demo-shockwave" class="showcase-block">
       <div class="block-header">
         <span class="block-number">03</span>
-        <h2 class="block-title">Fala po Dotknięciu</h2>
+        <h2 class="block-title">Fala Uderzeniowa</h2>
       </div>
       <p class="block-lead">
-        Dotykaj ekranu wewnątrz pola (także multi-touch), aby generować rozchodzące się fale uderzeniowe.
+        Dotknij dowolnego miejsca w polu, aby wywołać impuls geometryczny.
       </p>
 
-      <div class="shockwave-arena" id="shockwaveArena" role="button" tabindex="0" aria-label="Dotknij lub kliknij, aby wywołać falę">
+      <div class="shockwave-arena" id="shockwaveArena">
         <div class="shockwave-ambient-grid"></div>
         <div class="shockwave-center-prompt">
-          <div class="crosshair-icon">
-            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"/>
-              <line x1="12" y1="2" x2="12" y2="7"/>
-              <line x1="12" y1="17" x2="12" y2="22"/>
-              <line x1="2" y1="12" x2="7" y2="12"/>
-              <line x1="17" y1="12" x2="22" y2="12"/>
-            </svg>
-          </div>
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9"/>
+            <line x1="12" y1="2" x2="12" y2="7"/>
+            <line x1="12" y1="17" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="7" y2="12"/>
+            <line x1="17" y1="12" x2="22" y2="12"/>
+          </svg>
           <span class="arena-caption">DOTKNIJ TUTAJ</span>
         </div>
-
-        <div class="shockwave-coords" id="shockCoords">POZYCJA: [ DOTKNIJ POLE ]</div>
+        <div class="shockwave-coords" id="shockCoords">POZYCJA: [ DOTKNIJ ]</div>
       </div>
     </section>
 
     <section id="demo-morph" class="showcase-block">
       <div class="block-header">
         <span class="block-number">04</span>
-        <h2 class="block-title">Płynny Morfizm Kształtów (SVG)</h2>
+        <h2 class="block-title">Morfizm Kształtów SVG</h2>
       </div>
       <p class="block-lead">
-        Przełączaj kształty za pomocą przycisków i obserwuj płynną deformację wektorową.
+        Wybierz figurę, aby płynnie przekształcić ścieżkę wektorową.
       </p>
 
       <div class="morph-arena">
         <div class="morph-shape-container">
-          <svg viewBox="0 0 200 200" class="morph-svg" aria-hidden="true">
+          <svg viewBox="0 0 200 200" class="morph-svg">
             <path id="morphPath" d="" fill="none" stroke="currentColor" stroke-width="2.5"/>
           </svg>
           <div class="morph-center-dot"></div>
         </div>
 
-        <div class="morph-actions" role="group" aria-label="Wybór kształtu geometrycznego">
+        <div class="morph-actions">
           <button class="morph-selector-btn active" data-shape="circle" type="button">OKRĄG</button>
           <button class="morph-selector-btn" data-shape="diamond" type="button">ROMB</button>
           <button class="morph-selector-btn" data-shape="star" type="button">GWIAZDA</button>
@@ -326,40 +322,35 @@
     <section id="demo-physics" class="showcase-block">
       <div class="block-header">
         <span class="block-number">05</span>
-        <h2 class="block-title">Fizyka i Przeciąganie Klocków</h2>
+        <h2 class="block-title">Fizyka i Kolizje</h2>
       </div>
       <p class="block-lead">
-        Przeciągaj klocki palcem lub myszką. Elementy zachowują pęd i odbijają się od krawędzi kontenera.
+        Przesuwaj klocki palcem po polu.
       </p>
 
       <div class="sandbox-toolbar">
         <button id="btnMagnetize" class="action-btn" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M4 10V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6M12 10V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6"/>
-            <path d="M4 10a8 8 0 0 0 16 0"/>
-          </svg>
-          <span>SIATKA</span>
+          <span>WYRÓWNAJ</span>
         </button>
-
         <button id="btnScatter" class="action-btn" type="button">
           <span>ROZRZUĆ</span>
         </button>
       </div>
 
       <div class="physics-sandbox" id="physicsSandbox">
-        <div class="phys-block" id="block1" tabindex="0" role="button" aria-label="Klocek A">
+        <div class="phys-block" id="block1">
           <span class="block-tag">KLOCEK A</span>
           <span class="block-glyph">01</span>
         </div>
-        <div class="phys-block" id="block2" tabindex="0" role="button" aria-label="Klocek B">
+        <div class="phys-block" id="block2">
           <span class="block-tag">KLOCEK B</span>
           <span class="block-glyph">02</span>
         </div>
-        <div class="phys-block" id="block3" tabindex="0" role="button" aria-label="Klocek C">
+        <div class="phys-block" id="block3">
           <span class="block-tag">KLOCEK C</span>
           <span class="block-glyph">03</span>
         </div>
-        <div class="phys-block" id="block4" tabindex="0" role="button" aria-label="Klocek D">
+        <div class="phys-block" id="block4">
           <span class="block-tag">KLOCEK D</span>
           <span class="block-glyph">04</span>
         </div>
@@ -369,15 +360,15 @@
     <section id="demo-button" class="showcase-block">
       <div class="block-header">
         <span class="block-number">06</span>
-        <h2 class="block-title">Morfujący Przycisk Akcji</h2>
+        <h2 class="block-title">Morfujący Przycisk</h2>
       </div>
       <p class="block-lead">
-        Dotknij przycisku, aby wywołać sekwencję: stan spoczynku, loader i zatwierdzenie.
+        Kliknij, aby sprawdzić przejścia stanów przycisku.
       </p>
 
       <div class="hypermorph-arena">
-        <button id="hyperBtn" class="hyper-btn state-idle" type="button" aria-live="polite">
-          <span class="hyper-label">KLIKNIJ MNIE!</span>
+        <button id="hyperBtn" class="hyper-btn state-idle" type="button">
+          <span class="hyper-label">KLIKNIJ MNIE</span>
           <span class="hyper-spinner" aria-hidden="true"></span>
           <span class="hyper-checkmark" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -385,34 +376,31 @@
             </svg>
           </span>
         </button>
-        <span class="hypermorph-status" id="btnStatusText" aria-live="polite">Stan: gotowy do kliknięcia</span>
+        <span class="hypermorph-status" id="btnStatusText">Stan: gotowy</span>
       </div>
     </section>
 
   </main>
 
-  <aside class="motion-dock" aria-label="Sterowanie parametrami ruchu">
+  <aside class="motion-dock" aria-label="Sterowanie prędkością">
     <div class="dock-item">
       <span class="dock-label">PRĘDKOŚĆ:</span>
-      <div class="dock-chips" role="group" aria-label="Wybór tempa animacji">
-        <button class="speed-chip" data-speed="0.2" type="button" aria-label="Prędkość 0.2x">0.2×</button>
-        <button class="speed-chip" data-speed="0.5" type="button" aria-label="Prędkość 0.5x">0.5×</button>
-        <button class="speed-chip active" data-speed="1.0" type="button" aria-label="Normalna prędkość 1.0x">1.0×</button>
+      <div class="dock-chips">
+        <button class="speed-chip" data-speed="0.2" type="button">0.2×</button>
+        <button class="speed-chip" data-speed="0.5" type="button">0.5×</button>
+        <button class="speed-chip active" data-speed="1.0" type="button">1.0×</button>
       </div>
     </div>
   </aside>
 
   <footer class="site-footer">
-    <div class="footer-left">
-      <span class="footer-bold">ANIMACJE PRZEJŚĆ ALANA // PROJEKT STUDENCKI</span>
-      <span class="footer-sub">BIAŁY MODERNIZM · CZYSTY JAVASCRIPT I CSS · STABILNE 60 FPS</span>
-    </div>
-    <div class="footer-right">
-      <span>ZAPROGRAMOWANE PRZEZ ALANA DLA CIEBIE</span>
+    <div>
+      <strong>PROJEKT ALANA // STUDENCKI</strong><br>
+      Czysty JS i CSS · 60 FPS
     </div>
   </footer>
 
   <script src="app.js"></script>
 </body>
-  </html>
-                
+          </html>
+          
