@@ -1,0 +1,1288 @@
+/* ==========================================================================
+   ANIMACJE PRZEJŚĆ ALANA - MODERNISTYCZNY DESIGN
+   Czysty kod, brak zbędnych bibliotek, stabilne 60 FPS
+   ========================================================================== */
+
+:root {
+  /* Paleta bieli i głębokiego atramentu */
+  --bg-white: #ffffff;
+  --bg-subtle: #f8f9fa;
+  --bg-surface: #f1f3f5;
+  --bg-hover: #e9ecef;
+
+  --border-light: #e5e7eb;
+  --border-strong: #0f172a;
+  --border-dark: #000000;
+
+  --text-main: #0a0c10;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inv: #ffffff;
+
+  --accent-blue: #2563eb;
+  --accent-green: #10b981;
+
+  /* Typografia */
+  --font-display: 'Epilogue', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Krzywe interpolacji */
+  --ease-quint: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-material: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Czasy animacji skalowane z poziomu sterownika */
+  --speed-mult: 1;
+  --dur-fast: calc(200ms * var(--speed-mult));
+  --dur-normal: calc(450ms * var(--speed-mult));
+  --dur-slow: calc(750ms * var(--speed-mult));
+  --dur-intro: calc(950ms * var(--speed-mult));
+
+  /* Cienie głębi */
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   RESET I DOSTOSOWANIE SYSTEMU PRZEGLĄDARKI
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background: var(--text-main);
+  color: var(--text-inv);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  background-color: var(--bg-white);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-display);
+  background-color: var(--bg-white);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-strong);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   00. KURTYNA STARTOWA (5-KOLUMNOWA ŻALUZJA)
+   ========================================================================== */
+
+.intro-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  pointer-events: none;
+  visibility: visible;
+}
+
+.intro-curtain.hidden {
+  visibility: hidden;
+}
+
+.intro-curtain.instant-reset,
+.intro-curtain.instant-reset .shutter-col,
+.intro-curtain.instant-reset .intro-center-badge {
+  transition: none !important;
+}
+
+.intro-curtain.instant-reset .shutter-col {
+  transform: translateY(0%) !important;
+}
+
+.intro-curtain.instant-reset .intro-center-badge {
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+}
+
+.shutter-col {
+  flex: 1;
+  height: 100%;
+  background-color: #0f172a;
+  transform: translateY(0%);
+  transition: transform var(--dur-intro) var(--ease-quint);
+}
+
+.shutter-col:nth-child(even) {
+  background-color: #1e293b;
+}
+
+.intro-curtain.revealed .col-1 { transform: translateY(-100%); }
+.intro-curtain.revealed .col-2 { transform: translateY(100%); }
+.intro-curtain.revealed .col-3 { transform: translateY(-100%); }
+.intro-curtain.revealed .col-4 { transform: translateY(100%); }
+.intro-curtain.revealed .col-5 { transform: translateY(-100%); }
+
+.intro-center-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  padding: 24px 36px;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-modal);
+  transition: opacity 350ms ease, transform 450ms var(--ease-quint);
+}
+
+.intro-curtain.revealed .intro-center-badge {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.intro-loader-ring {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #e2e8f0;
+  border-top-color: var(--text-main);
+  border-radius: 50%;
+  animation: introSpin 1s linear infinite;
+}
+
+@keyframes introSpin {
+  to { transform: rotate(360deg); }
+}
+
+.intro-title-text {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   TŁO CANVAS (INTERAKTYWNA SIATKA FALOWA)
+   ========================================================================== */
+
+.background-wave-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* ==========================================================================
+   GÓRNA LISTWA NAWIGACYJNA (MASTHEAD)
+   ========================================================================== */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 48px;
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.masthead-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-monogram {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--text-main);
+  color: var(--text-inv);
+  padding: 4px 8px;
+  letter-spacing: 0.04em;
+}
+
+.brand-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-main);
+}
+
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.telemetry-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.telemetry-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all var(--dur-fast) ease;
+}
+
+.action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-main);
+}
+
+/* ==========================================================================
+   UKŁAD GŁÓWNY
+   ========================================================================== */
+
+.page-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 48px 160px;
+}
+
+/* ==========================================================================
+   01. HERO / KINETYCZNA TYPOGRAFIA
+   ========================================================================== */
+
+.hero-section {
+  padding: 80px 0 64px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.pill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+  padding: 4px 10px;
+  background: var(--bg-subtle);
+}
+
+.kinetic-hero-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  user-select: none;
+  margin-bottom: 32px;
+}
+
+.title-row {
+  display: flex;
+  overflow: hidden;
+}
+
+.title-row.row-alan {
+  margin-top: 6px;
+  gap: 6px;
+}
+
+.char-span {
+  display: inline-block;
+  font-size: clamp(3rem, 8vw, 7.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text-main);
+  transition: transform 300ms var(--ease-quint), color 200ms ease;
+  transform-origin: center center;
+  cursor: default;
+}
+
+.char-span.highlight {
+  background: var(--text-main);
+  color: var(--text-inv);
+  padding: 0 clamp(6px, 1.2vw, 14px);
+  border-radius: 2px;
+}
+
+.char-span:hover {
+  transform: translateY(-12px) scale(1.1) rotate(3deg);
+  color: var(--text-main);
+}
+
+.char-span.highlight:hover {
+  color: var(--text-inv);
+  background: var(--border-dark);
+}
+
+.hero-description {
+  max-width: 68ch;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+.hero-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.quick-link {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  padding: 10px 16px;
+  background: #ffffff;
+  transition: all var(--dur-fast) ease;
+}
+
+.quick-link:hover {
+  color: var(--text-main);
+  border-color: var(--text-main);
+  background: var(--bg-subtle);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   STYLE WSPÓLNE DLA BLOKÓW POKAZOWYCH
+   ========================================================================== */
+
+.showcase-block {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.block-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.block-number {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.block-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+
+.block-lead {
+  max-width: 75ch;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+/* ==========================================================================
+   02. PEŁNOEKRANOWE PRZEJŚCIE KURTYNOWE (SLAT SCREEN TRANSITION)
+   ========================================================================== */
+
+.screen-transition-stage {
+  border: 1px solid var(--border-light);
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen-nav {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  overflow-x: auto;
+}
+
+.screen-tab-btn {
+  flex: 1;
+  min-width: 180px;
+  padding: 16px 24px;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  transition: all var(--dur-fast) ease;
+}
+
+.screen-tab-btn:hover {
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+.screen-tab-btn.active {
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+.screen-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--text-main);
+}
+
+.screen-display-area {
+  position: relative;
+  min-height: 380px;
+  padding: 48px;
+}
+
+/* Żaluzja przejściowa */
+.screen-wiper {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  pointer-events: none;
+}
+
+.wiper-slat {
+  flex: 1;
+  height: 100%;
+  background: #0f172a;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 380ms var(--ease-quint);
+}
+
+.wiper-slat:nth-child(even) {
+  background: #1e293b;
+  transform-origin: bottom;
+}
+
+.screen-wiper.wiping-in .wiper-slat {
+  transform: scaleY(1);
+}
+
+.screen-wiper.wiping-out .wiper-slat {
+  transform: scaleY(0);
+}
+
+.screen-pane {
+  display: none;
+  width: 100%;
+}
+
+.screen-pane.active {
+  display: block;
+  animation: paneFadeIn 450ms var(--ease-quint) forwards;
+}
+
+@keyframes paneFadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pane-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.pane-text {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  max-width: 65ch;
+}
+
+.pane-interactive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.grid-cell {
+  height: 100px;
+  padding: 16px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--dur-fast) ease;
+}
+
+.grid-cell:hover {
+  border-color: var(--text-main);
+  background: #ffffff;
+  transform: scale(1.03);
+}
+
+.kinetic-oscillators {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 140px;
+}
+
+.osc-bar {
+  width: 32px;
+  background: var(--text-main);
+  animation: oscWave 1.4s ease-in-out infinite alternate;
+}
+
+.b1 { height: 35%; animation-delay: 0.1s; }
+.b2 { height: 75%; animation-delay: 0.3s; }
+.b3 { height: 45%; animation-delay: 0.5s; }
+.b4 { height: 95%; animation-delay: 0.7s; }
+.b5 { height: 60%; animation-delay: 0.9s; }
+
+@keyframes oscWave {
+  from { transform: scaleY(0.4); }
+  to { transform: scaleY(1.1); }
+}
+
+.brutalist-counter-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.giant-num {
+  font-size: clamp(3.5rem, 6vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.sub-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   03. ROZROST PRZESTRZENNY 3D (FLIP)
+   ========================================================================== */
+
+.flip-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  perspective: 1200px;
+}
+
+.flip-specimen {
+  border: 1px solid var(--border-light);
+  background: #ffffff;
+  padding: 32px 28px;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+  transform-style: preserve-3d;
+}
+
+.flip-specimen:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-hover);
+}
+
+.specimen-3d-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  pointer-events: none;
+}
+
+.specimen-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.specimen-id {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.specimen-status {
+  color: var(--text-muted);
+}
+
+.specimen-graphic {
+  height: 180px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--text-main);
+}
+
+.svg-orbit {
+  width: 80px;
+  height: 80px;
+  transition: transform 500ms var(--ease-quint);
+}
+
+.flip-specimen:hover .svg-orbit {
+  transform: rotate(45deg) scale(1.1);
+}
+
+.specimen-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: var(--text-main);
+}
+
+.specimen-action-prompt {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* Modal FLIP */
+.flip-modal-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.flip-modal-stage.active {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  opacity: 0;
+  transition: opacity var(--dur-normal) ease;
+}
+
+.flip-modal-stage.active .modal-backdrop {
+  opacity: 1;
+}
+
+.modal-expanded-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 720px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-modal);
+  padding: 48px;
+  transform-origin: center center;
+}
+
+.modal-close-trigger {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--dur-fast) ease;
+}
+
+.modal-close-trigger:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-main);
+}
+
+.modal-graphic-slot {
+  height: 240px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.modal-graphic-slot svg {
+  width: 100px;
+  height: 100px;
+}
+
+.modal-badge-id {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.modal-huge-heading {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.modal-body-copy {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.modal-telemetry-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+}
+
+.telemetry-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+}
+
+.t-name {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.t-val {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   04. FALA UDERZENIOWA (SHOCKWAVE ARENA)
+   ========================================================================== */
+
+.shockwave-arena {
+  position: relative;
+  height: 380px;
+  padding: 24px;
+  border: 1px solid var(--border-light);
+  background: #ffffff;
+  overflow: hidden;
+  cursor: crosshair;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shockwave-ambient-grid {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-white);
+  pointer-events: none;
+}
+
+.shockwave-center-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  pointer-events: none;
+  color: var(--text-main);
+}
+
+.arena-caption {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  padding: 6px 14px;
+}
+
+.shockwave-circle,
+.wave-pulse {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--text-main);
+  background: rgba(15, 23, 42, 0.04);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  opacity: 1;
+  animation: waveExpand 750ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes waveExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.95;
+    border-width: 4px;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(28);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+.shockwave-coords {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   05. MORFIZM FORM GEOMETRYCZNYCH (LIQUID SPLINE MORPH)
+   ========================================================================== */
+
+.morph-arena {
+  border: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.morph-shape-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.morph-svg {
+  width: 100%;
+  height: 100%;
+  color: var(--text-main);
+}
+
+#morphPath {
+  transition: none;
+}
+
+.morph-core-dot,
+.morph-center-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-main);
+  transition: transform 300ms var(--ease-quint);
+}
+
+.morph-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.morph-selector-btn {
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--dur-fast) ease;
+}
+
+.morph-selector-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+  border-color: var(--text-main);
+}
+
+.morph-selector-btn.active {
+  background: var(--text-main);
+  color: var(--text-inv);
+  border-color: var(--text-main);
+}
+
+/* ==========================================================================
+   06. POLIGON FIZYKI SPRĘŻYN (GRAVITY SANDBOX)
+   ========================================================================== */
+
+.sandbox-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.physics-sandbox {
+  position: relative;
+  height: 360px;
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  overflow: hidden;
+  user-select: none;
+}
+
+.phys-block {
+  position: absolute;
+  width: 130px;
+  height: 74px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-card);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: grab;
+  touch-action: none;
+  transition: box-shadow var(--dur-fast) ease;
+}
+
+.phys-block:active {
+  cursor: grabbing;
+  box-shadow: var(--shadow-modal);
+  border-color: var(--text-main);
+}
+
+.block-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.block-glyph {
+  font-size: 1.2rem;
+  font-weight: 800;
+  align-self: flex-end;
+}
+
+/* ==========================================================================
+   07. HYPER-MORPH BUTTON (WIELOSTANOWY PRZYCISK)
+   ========================================================================== */
+
+.hypermorph-arena {
+  border: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  padding: 70px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.hyper-btn {
+  width: 260px;
+  height: 56px;
+  background: var(--text-main);
+  color: var(--text-inv);
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 0px;
+  transition: transform var(--dur-normal) var(--ease-quint),
+              border-radius var(--dur-normal) var(--ease-quint),
+              background-color var(--dur-normal) ease;
+}
+
+.hyper-spinner,
+.hyper-checkmark {
+  display: none;
+  position: absolute;
+}
+
+.hyper-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: introSpin 0.8s linear infinite;
+}
+
+.hyper-btn.state-loading {
+  width: 56px;
+  border-radius: 50%;
+  background: var(--text-main);
+}
+
+.hyper-btn.state-loading .hyper-label { opacity: 0; }
+.hyper-btn.state-loading .hyper-spinner { display: block; }
+
+.hyper-btn.state-success {
+  width: 56px;
+  border-radius: 50%;
+  background: var(--accent-green);
+}
+
+.hyper-btn.state-success .hyper-label { opacity: 0; }
+.hyper-btn.state-success .hyper-checkmark {
+  display: block;
+  animation: popCheck 350ms var(--ease-quint) forwards;
+}
+
+@keyframes popCheck {
+  from { transform: scale(0.3); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.hypermorph-hint,
+.hypermorph-status {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: color var(--dur-fast) ease;
+}
+
+/* ==========================================================================
+   PŁYWAJĄCY KONSOLIDATOR TEMPA RUCHU (DOCK)
+   ========================================================================== */
+
+.motion-dock {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-modal);
+  max-width: 90vw;
+}
+
+.dock-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dock-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.dock-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.speed-chip {
+  padding: 6px 14px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--dur-fast) ease;
+}
+
+.speed-chip:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+}
+
+.speed-chip.active {
+  background: var(--text-main);
+  color: var(--text-inv);
+  border-color: var(--text-main);
+}
+
+/* ==========================================================================
+   STOPKA
+   ========================================================================== */
+
+.site-footer {
+  border-top: 1px solid var(--border-light);
+  padding: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.footer-bold {
+  font-weight: 800;
+  color: var(--text-main);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --speed-mult: 0.001;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .intro-curtain { display: none !important; }
+}
+
+.reduced-motion-active :root {
+  --speed-mult: 0.001;
+}
+
+.reduced-motion-active *,
+.reduced-motion-active *::before,
+.reduced-motion-active *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ==========================================================================
+   RESPONSYWNOŚĆ
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .masthead {
+    padding: 16px 24px;
+  }
+  .page-container {
+    padding: 0 24px 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .masthead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .masthead-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .motion-dock {
+    flex-direction: column;
+    width: calc(100% - 32px);
+    bottom: 16px;
+    align-items: flex-start;
+  }
+}
